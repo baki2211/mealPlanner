@@ -25,12 +25,15 @@
                                     {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
                                     {% if dayRecipes is empty %}
                                         <p>No recipes planned for this time</p>
-                                        <button class="btn btn-sm btn-primary">Add</button>
+                                        <a href="{{ path('app_planner_add_recipe', { 'day': day.id, 'time': time.id, 'planner': app.user.planner.id }) }}" class="btn btn-sm btn-primary">Add</a>
                                     {% else %}
-                                        {% for recipe in dayRecipes %}
+                                        {% for plannerRecipe in dayRecipes %}
                                             <div class="d-flex justify-content-between align-items-center">
-                                                {{ recipe.name }}
-                                                <button class="btn btn-sm btn-danger">Remove</button>
+                                                {{ plannerRecipe.getRecipe().getName() }}
+                                                <form method="post" action="{{ path('app_planner_remove_recipe', { 'id': plannerRecipe.getId() }) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plannerRecipe.getId()) }}">
+                                                <button class="btn btn-sm btn-danger" type="submit">Remove</button>
+                                            </form>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
@@ -43,4 +46,7 @@
         </div>
     </div>
 {% endblock %}
+
+
+
 
