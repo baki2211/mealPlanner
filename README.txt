@@ -1,3 +1,8 @@
+### Meal Planner Project.
+
+### Web application built with Symfony 7.1, Php, Js
+### You can register, log in ad access you personal week Planner. Chose from a variety of recipes uploaded by all the subscribed users. 
+
 ### Get the Repository:
 ### Open new VSCode windove and select:
 Clone git Repository 
