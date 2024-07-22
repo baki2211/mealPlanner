@@ -1,5 +1,9 @@
 {% extends 'base.html.twig' %} {% block title %}Hello HomeController!{% endblock
 %} {% block body %}
+<div class="container">
+  <h1 class="mt-2">WELCOME PAGE</h1>
+</div>
+
 <div
   class="p-5 text-center bg-image d-flex justify-content-center align-items-center"
   style="
@@ -11,15 +15,20 @@
   <div class="mask" style="background-color: rgba(255, 253, 253, 0)">
     <div class="d-flex justify-content-center align-items-center h-100">
       <div class="text-white">
-        <h1 class="mb-3">Plan your meals!</h1>
-        <a class="btn btn-outline-light btn-lg" href="/register" role="button"
+        <h1 class="mb-3">The easiest way to plan your meals!</h1>
+        <h4 class="mb-3">Get started</h4>
+        <a
+          class="btn btn-outline-light btn-lg me-2"
+          href="/register"
+          role="button"
           >Sign Up</a
         >
-        <a class="btn btn-outline-light btn-lg" href="/login" role="button"
+        <a class="btn btn-outline-light btn-lg ms-2" href="/login" role="button"
           >Sign In</a
         >
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}
