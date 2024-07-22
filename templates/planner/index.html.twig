@@ -4,41 +4,45 @@
 
 {% block title %}Weekly Planner{% endblock %}
 
-{% block body %}
-    <h1>Weekly Planner</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                {% for day in days %}
-                    <th>{{ day.name }}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                {% for day in days %}
-                    <td>
-                        {% for time in times %}
-                            <h3>{{ time.name }}</h3>
-                            <div class="{{ time.name|lower }}-recipes">
-                                {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
-                                {% if dayRecipes is empty %}
-                                    <p>No recipes planned for this time</p>
-                                    <button>Add</button>
-                                {% else %}
-                                    {% for recipe in dayRecipes %}
-                                        <div>
-                                            {{ recipe.name }}
-                                            <button>Remove</button>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-                    </td>
-                {% endfor %}
-            </tr>
-        </tbody>
-    </table>
+{% block stylesheets %}
+    {# Include Bootstrap CSS #}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 {% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center my-4">Weekly Planner</h1>
+
+        <div class="row">
+            {% for day in days %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h4>{{ day.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            {% for time in times %}
+                                <h5>{{ time.name }}</h5>
+                                <div class="{{ time.name|lower }}-recipes mb-3">
+                                    {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
+                                    {% if dayRecipes is empty %}
+                                        <p>No recipes planned for this time</p>
+                                        <button class="btn btn-sm btn-primary">Add</button>
+                                    {% else %}
+                                        {% for recipe in dayRecipes %}
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                {{ recipe.name }}
+                                                <button class="btn btn-sm btn-danger">Remove</button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
