@@ -27,12 +27,23 @@
                 <th>Calories</th>
                 <td>{{ recipe.calories }}</td>
             </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ recipe.author.name }}</td>
+            </tr>
+            <tr>
+                <th>Ingredients</th>
+                <td>ingredient list</td>
+            </tr>
         </tbody>
     </table>
 
     <a href="{{ path('app_recipe_index') }}">back to list</a>
 
-    <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
+    {% if recipe.author.id == app.user.id %}
+        <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
+         {{ include('recipe/_delete_form.html.twig') }}
+    {% endif %}
 
-    {{ include('recipe/_delete_form.html.twig') }}
+   
 {% endblock %}

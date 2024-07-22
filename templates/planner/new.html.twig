@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Planner{% endblock %}
+
+{% block body %}
+    <h1>Create new Planner</h1>
+
+    {{ include('planner/_form.html.twig') }}
+
+    <a href="{{ path('app_planner') }}">back to list</a>
+{% endblock %}

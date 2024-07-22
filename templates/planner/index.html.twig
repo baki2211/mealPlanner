@@ -1,2 +1,37 @@
-{% extends 'base.html.twig' %} {% block title %}Hello PlannerController!{%
-endblock %} {% block body %} User planner {% endblock %}
+{# templates/planner/index.html.twig #} {% extends 'base.html.twig' %} {% block
+title %}Weekly Planner{% endblock %} {% block body %}
+<h1>Weekly Planner</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      {% for day in days %}
+      <th>{{ day.name }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      {% for day in days %}
+      <td>
+        {% for time in times %}
+        <h3>{{ time.name }}</h3>
+        <div class="{{ time.name | lower }}-recipes">
+          {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %} {% if
+          dayRecipes is empty %}
+          <p>No recipes planned for this time</p>
+          <button>Add</button>
+          {% else %} {% for recipe in dayRecipes %}
+          <div>
+            {{ recipe.name }}
+            <button>Remove</button>
+          </div>
+          {% endfor %} {% endif %}
+        </div>
+        {% endfor %}
+      </td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+{% endblock %}

@@ -17,23 +17,27 @@
             </tr>
         </thead>
         <tbody>
-        {% for recipe in recipes %}
-            <tr>
-                <td>{{ recipe.id }}</td>
-                <td>{{ recipe.name }}</td>
-                <td>{{ recipe.description }}</td>
-                <td>{{ recipe.cookingTime }}</td>
-                <td>{{ recipe.calories }}</td>
-                <td>
-                    <a href="{{ path('app_recipe_show', {'id': recipe.id}) }}">show</a>
-                    <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
-                </td>
-            </tr>
+        {% if recipes|length > 0 %}
+            {% for recipe in recipes %}
+                <tr>
+                    <td>{{ recipe.id }}</td>
+                    <td>{{ recipe.name }}</td>
+                    <td>{{ recipe.description }}</td>
+                    <td>{{ recipe.cookingTime }}</td>
+                    <td>{{ recipe.calories }}</td>
+                    <td>
+                        <a href="{{ path('app_recipe_show', {'id': recipe.id}) }}">show</a>
+                        {% if recipe.author.id == app.user.id %}
+                            <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
         {% else %}
             <tr>
                 <td colspan="6">no records found</td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 

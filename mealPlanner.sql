@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 17, 2024 at 06:34 PM
+-- Generation Time: Jul 19, 2024 at 09:32 AM
 -- Server version: 8.0.37-0ubuntu0.22.04.3
 -- PHP Version: 8.1.2-1ubuntu2.18
 
@@ -97,6 +97,13 @@ CREATE TABLE `planner` (
   `user_id` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `planner`
+--
+
+INSERT INTO `planner` (`id`, `user_id`) VALUES
+(3, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -107,6 +114,13 @@ CREATE TABLE `planner_recipe` (
   `planner_id` int NOT NULL,
   `recipe_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `planner_recipe`
+--
+
+INSERT INTO `planner_recipe` (`planner_id`, `recipe_id`) VALUES
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -119,6 +133,13 @@ CREATE TABLE `planner_time` (
   `time_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `planner_time`
+--
+
+INSERT INTO `planner_time` (`planner_id`, `time_id`) VALUES
+(3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -129,6 +150,13 @@ CREATE TABLE `planner_week` (
   `planner_id` int NOT NULL,
   `week_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `planner_week`
+--
+
+INSERT INTO `planner_week` (`planner_id`, `week_id`) VALUES
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -145,6 +173,14 @@ CREATE TABLE `recipe` (
   `calories` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `recipe`
+--
+
+INSERT INTO `recipe` (`id`, `author_id`, `name`, `description`, `cooking_time`, `calories`) VALUES
+(1, 1, 'test', 'qq', 'qq', 'qq'),
+(2, 2, 'test', 'eee', 'eee', 'ee');
+
 -- --------------------------------------------------------
 
 --
@@ -156,6 +192,14 @@ CREATE TABLE `recipe_category` (
   `category_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `recipe_category`
+--
+
+INSERT INTO `recipe_category` (`recipe_id`, `category_id`) VALUES
+(1, 2),
+(2, 3);
+
 -- --------------------------------------------------------
 
 --
@@ -166,6 +210,14 @@ CREATE TABLE `recipe_ingredient_list` (
   `recipe_id` int NOT NULL,
   `ingredient_list_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `recipe_ingredient_list`
+--
+
+INSERT INTO `recipe_ingredient_list` (`recipe_id`, `ingredient_list_id`) VALUES
+(1, 1),
+(2, 1);
 
 -- --------------------------------------------------------
 
@@ -207,7 +259,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `name`, `surname`) VALUES
-(1, 'user@user.com', '[\"ROLE_USER\"]', '$2y$13$XU0FZan9POwae2CuK3lg4OeUxTBrcgsuBikVgFR.TG2YwqiP2pfuG', 'user', 'user'),
+(1, 'user@user.com', '[\"ROLE_BLOCK\"]', '$2y$13$XU0FZan9POwae2CuK3lg4OeUxTBrcgsuBikVgFR.TG2YwqiP2pfuG', 'user', 'user'),
 (2, 'admin@admin.com', '[\"ROLE_ADMIN\"]', '$2y$13$Ct1UYrgK.gnJOfCguntXsul3m5.AsaVczaKUeR8iKApQHHRjQjxeK', 'admin', 'admin');
 
 -- --------------------------------------------------------
@@ -358,13 +410,13 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT for table `planner`
 --
 ALTER TABLE `planner`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `recipe`
 --
 ALTER TABLE `recipe`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `time`
