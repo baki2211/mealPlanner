@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Planner;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,6 +34,10 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // do anything else you need here, like send an email
+            $planner = new Planner();
+            $planner->setUser($user);
+            $entityManager->persist($planner);
+            $entityManager->flush();
 
             return $this->redirectToRoute('app_login');
         }

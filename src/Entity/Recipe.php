@@ -43,10 +43,17 @@ class Recipe
     #[ORM\ManyToMany(targetEntity: IngredientList::class, inversedBy: 'recipes')]
     private Collection $ingredients;
 
+    /**
+     * @var Collection<int, PlannerRecipe>
+     */
+    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'recipe')]
+    private Collection $plannerRecipes;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
+        $this->plannerRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,11 +114,16 @@ class Recipe
         return $this->author;
     }
 
-    public function setAuthor(?User $author): static
+    public function setAuthor(?User $author): self
     {
         $this->author = $author;
 
         return $this;
+    }
+
+    public function getAuthorName(): ?string
+    {
+        return $this->author ? $this->author->getName() : null;
     }
 
     /**
@@ -158,6 +170,36 @@ class Recipe
     public function removeIngredient(IngredientList $ingredient): static
     {
         $this->ingredients->removeElement($ingredient);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PlannerRecipe>
+     */
+    public function getPlannerRecipes(): Collection
+    {
+        return $this->plannerRecipes;
+    }
+
+    public function addPlannerRecipe(PlannerRecipe $plannerRecipe): static
+    {
+        if (!$this->plannerRecipes->contains($plannerRecipe)) {
+            $this->plannerRecipes->add($plannerRecipe);
+            $plannerRecipe->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePlannerRecipe(PlannerRecipe $plannerRecipe): static
+    {
+        if ($this->plannerRecipes->removeElement($plannerRecipe)) {
+            // set the owning side to null (unless already changed)
+            if ($plannerRecipe->getRecipe() === $this) {
+                $plannerRecipe->setRecipe(null);
+            }
+        }
 
         return $this;
     }

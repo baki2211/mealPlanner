@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Entity;
 
 use App\Repository\PlannerRepository;
@@ -12,35 +13,18 @@ class Planner
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'planner', cascade: ['persist', 'remove'])]
     private ?User $user = null;
 
-    /**
-     * @var Collection<int, Week>
-     */
-    #[ORM\ManyToMany(targetEntity: Week::class)]
-    private Collection $day;
-
-    /**
-     * @var Collection<int, Recipe>
-     */
-    #[ORM\ManyToMany(targetEntity: Recipe::class)]
-    private Collection $recipe;
-
-    /**
-     * @var Collection<int, Time>
-     */
-    #[ORM\ManyToMany(targetEntity: Time::class)]
-    private Collection $time;
+    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'planner', cascade: ['persist', 'remove'])]
+    private Collection $plannerRecipes;
 
     public function __construct()
     {
-        $this->day = new ArrayCollection();
-        $this->recipe = new ArrayCollection();
-        $this->time = new ArrayCollection();
+        $this->plannerRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -56,78 +40,35 @@ class Planner
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
     /**
-     * @return Collection<int, Week>
+     * @return Collection<int, PlannerRecipe>
      */
-    public function getDay(): Collection
+    public function getPlannerRecipes(): Collection
     {
-        return $this->day;
+        return $this->plannerRecipes;
     }
 
-    public function addDay(Week $day): static
+    public function addPlannerRecipe(PlannerRecipe $plannerRecipe): static
     {
-        if (!$this->day->contains($day)) {
-            $this->day->add($day);
+        if (!$this->plannerRecipes->contains($plannerRecipe)) {
+            $this->plannerRecipes->add($plannerRecipe);
+            $plannerRecipe->setPlanner($this);
         }
 
         return $this;
     }
 
-    public function removeDay(Week $day): static
+    public function removePlannerRecipe(PlannerRecipe $plannerRecipe): static
     {
-        $this->day->removeElement($day);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Recipe>
-     */
-    public function getRecipe(): Collection
-    {
-        return $this->recipe;
-    }
-
-    public function addRecipe(Recipe $recipe): static
-    {
-        if (!$this->recipe->contains($recipe)) {
-            $this->recipe->add($recipe);
+        if ($this->plannerRecipes->removeElement($plannerRecipe)) {
+            // set the owning side to null (unless already changed)
+            if ($plannerRecipe->getPlanner() === $this) {
+                $plannerRecipe->setPlanner(null);
+            }
         }
-
-        return $this;
-    }
-
-    public function removeRecipe(Recipe $recipe): static
-    {
-        $this->recipe->removeElement($recipe);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Time>
-     */
-    public function getTime(): Collection
-    {
-        return $this->time;
-    }
-
-    public function addTime(Time $time): static
-    {
-        if (!$this->time->contains($time)) {
-            $this->time->add($time);
-        }
-
-        return $this;
-    }
-
-    public function removeTime(Time $time): static
-    {
-        $this->time->removeElement($time);
 
         return $this;
     }

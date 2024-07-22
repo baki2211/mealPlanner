@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {# templates/planner/index.html.twig #} {% extends 'base.html.twig' %} {% block
 title %}Weekly Planner{% endblock %} {% block body %}
 <h1>Weekly Planner</h1>
@@ -34,4 +35,50 @@ title %}Weekly Planner{% endblock %} {% block body %}
     </tr>
   </tbody>
 </table>
+=======
+{% extends 'base.html.twig' %}
+
+{% block title %}Weekly Planner{% endblock %}
+
+{% block body %}
+    <h1>Weekly Planner</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                {% for day in days %}
+                    <th>{{ day.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for day in days %}
+                    <td>
+                        {% for time in times %}
+                            <h3>{{ time.name }}</h3>
+                            <div class="{{ time.name|lower }}-recipes">
+                                {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
+                                {% if dayRecipes is empty %}
+                                    <p>No recipes planned for this time</p>
+                                    <a href="{{ path('app_planner_add_recipe', { 'day': day.id, 'time': time.id, 'planner': app.user.planner.id }) }}">Add</a>
+                                {% else %}
+                                    {% for plannerRecipe in dayRecipes %}
+                                        <div>
+                                            {{ plannerRecipe.getRecipe().getName() }}
+                                            <form method="post" action="{{ path('app_planner_remove_recipe', { 'id': plannerRecipe.getId() }) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plannerRecipe.getId()) }}">
+                                                <button type="submit">Remove</button>
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+>>>>>>> master
 {% endblock %}

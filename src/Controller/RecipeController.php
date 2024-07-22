@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use App\Entity\Recipe;
@@ -10,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/profile/recipe')]
@@ -48,7 +47,7 @@ class RecipeController extends AbstractController
 
         return $this->render('recipe/new.html.twig', [
             'recipe' => $recipe,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -84,13 +83,14 @@ class RecipeController extends AbstractController
     public function delete(Request $request, Recipe $recipe, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessIfBlocked();
-        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $recipe->getId(), $request->get('_token'))) {
             $entityManager->remove($recipe);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_recipe_index', [], Response::HTTP_SEE_OTHER);
     }
+
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCKED')) {
