@@ -10,19 +10,19 @@ class PlannerRecipe
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plannerRecipes')]
+    #[ORM\ManyToOne(targetEntity: Planner::class, inversedBy: 'plannerRecipes')]
     private ?Planner $planner = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plannerRecipes')]
+    #[ORM\ManyToOne(targetEntity: Recipe::class)]
     private ?Recipe $recipe = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plannerRecipes')]
+    #[ORM\ManyToOne(targetEntity: Week::class)]
     private ?Week $day = null;
 
-    #[ORM\ManyToOne(inversedBy: 'plannerRecipes')]
+    #[ORM\ManyToOne(targetEntity: Time::class)]
     private ?Time $time = null;
 
     public function getId(): ?int
@@ -38,7 +38,6 @@ class PlannerRecipe
     public function setPlanner(?Planner $planner): static
     {
         $this->planner = $planner;
-
         return $this;
     }
 
@@ -50,7 +49,6 @@ class PlannerRecipe
     public function setRecipe(?Recipe $recipe): static
     {
         $this->recipe = $recipe;
-
         return $this;
     }
 
@@ -62,7 +60,6 @@ class PlannerRecipe
     public function setDay(?Week $day): static
     {
         $this->day = $day;
-
         return $this;
     }
 
@@ -74,7 +71,6 @@ class PlannerRecipe
     public function setTime(?Time $time): static
     {
         $this->time = $time;
-
         return $this;
     }
 }

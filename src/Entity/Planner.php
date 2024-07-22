@@ -1,20 +1,19 @@
 <?php
 
-// src/Entity/Planner.php
 
 namespace App\Entity;
 
+use App\Repository\PlannerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\PlannerRepository;
 
 #[ORM\Entity(repositoryClass: PlannerRepository::class)]
 class Planner
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\OneToOne(inversedBy: 'planner', cascade: ['persist', 'remove'])]
@@ -41,7 +40,6 @@ class Planner
     public function setUser(?User $user): static
     {
         $this->user = $user;
-
         return $this;
     }
 
@@ -56,7 +54,7 @@ class Planner
     public function addPlannerRecipe(PlannerRecipe $plannerRecipe): static
     {
         if (!$this->plannerRecipes->contains($plannerRecipe)) {
-            $this->plannerRecipes[] = $plannerRecipe;
+            $this->plannerRecipes->add($plannerRecipe);
             $plannerRecipe->setPlanner($this);
         }
 
@@ -66,6 +64,7 @@ class Planner
     public function removePlannerRecipe(PlannerRecipe $plannerRecipe): static
     {
         if ($this->plannerRecipes->removeElement($plannerRecipe)) {
+            // set the owning side to null (unless already changed)
             if ($plannerRecipe->getPlanner() === $this) {
                 $plannerRecipe->setPlanner(null);
             }
@@ -74,4 +73,3 @@ class Planner
         return $this;
     }
 }
-

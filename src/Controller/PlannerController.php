@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Planner;
+use App\Entity\PlannerRecipe;
+use App\Entity\Time;
 use App\Entity\User;
+use App\Entity\Week;
 use App\Form\PlannerType;
+use App\Repository\PlannerRecipeRepository;
 use App\Repository\PlannerRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\TimeRepository;
@@ -14,15 +18,20 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/profile/planner')]
 class PlannerController extends AbstractController
 {
     #[Route('/', name: 'app_planner', methods: ['GET'])]
-    public function index(PlannerRepository $plannerRepository, UserRepository $userRepository, RecipeRepository $recipeRepository, WeekRepository $weekRepository, TimeRepository $timeRepository): Response
-    {
+    public function index(
+        PlannerRepository $plannerRepository,
+        UserRepository $userRepository,
+        RecipeRepository $recipeRepository,
+        WeekRepository $weekRepository,
+        TimeRepository $timeRepository
+    ): Response {
         $this->denyAccessIfBlocked();
         $user = $this->getUser();
         $days = $weekRepository->findAll();
@@ -31,7 +40,7 @@ class PlannerController extends AbstractController
         $recipesInPlanner = [];
         if ($planner) {
             foreach ($planner->getPlannerRecipes() as $plannerRecipe) {
-                $recipesInPlanner[$plannerRecipe->getDay()->getId()][$plannerRecipe->getTime()->getId()][] = $plannerRecipe->getRecipe();
+                $recipesInPlanner[$plannerRecipe->getDay()->getId()][$plannerRecipe->getTime()->getId()][] = $plannerRecipe;
             }
         }
         return $this->render('planner/index.html.twig', [
@@ -41,71 +50,62 @@ class PlannerController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_planner_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $this->denyAccessIfBlocked();
-        $planner = new Planner();
-        $form = $this->createForm(PlannerType::class, $planner);
-        $form->handleRequest($request);
+    #[Route('/planner/add-recipe', name: 'app_planner_add_recipe')]
+    public function addRecipe(
+        Request $request,
+        RecipeRepository $recipeRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $dayId = $request->query->get('day');
+        $timeId = $request->query->get('time');
+        $plannerId = $request->query->get('planner');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user = $this->getUser();
-            if (!$user) {
-                throw new AccessDeniedException('You must be logged in to create a recipe.');
-            }
-            $planner->setUser($user);
-            $entityManager->persist($planner);
+        $recipes = $recipeRepository->findAll();
+
+        if ($request->isMethod('POST')) {
+            $recipeId = $request->request->get('recipe');
+            $recipe = $recipeRepository->find($recipeId);
+            $planner = $entityManager->getRepository(Planner::class)->find($plannerId);
+            $day = $entityManager->getRepository(Week::class)->find($dayId);
+            $time = $entityManager->getRepository(Time::class)->find($timeId);
+
+            $plannerRecipe = new PlannerRecipe();
+            $plannerRecipe->setPlanner($planner);
+            $plannerRecipe->setRecipe($recipe);
+            $plannerRecipe->setDay($day);
+            $plannerRecipe->setTime($time);
+
+            $entityManager->persist($plannerRecipe);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_planner', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_planner');
         }
 
-        return $this->render('planner/new.html.twig', [
-            'planner' => $planner,
-            'form' => $form,
+        return $this->render('planner/add_recipe.html.twig', [
+            'recipes' => $recipes,
+            'dayId' => $dayId,
+            'timeId' => $timeId,
+            'plannerId' => $plannerId,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_planner_show', methods: ['GET'])]
-    public function show(Planner $planner): Response
-    {
-        $this->denyAccessIfBlocked();
-        return $this->render('planner/show.html.twig', [
-            'planner' => $planner,
-        ]);
-    }
+    #[Route('/planner/remove-recipe/{id}', name: 'app_planner_remove_recipe', methods: ['POST'])]
+    public function removeRecipe(
+        $id,
+        PlannerRecipeRepository $plannerRecipeRepository,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response {
+        $plannerRecipe = $plannerRecipeRepository->find($id);
 
-    #[Route('/{id}/edit', name: 'app_planner_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Planner $planner, EntityManagerInterface $entityManager): Response
-    {
-        $this->denyAccessIfBlocked();
-        $form = $this->createForm(PlannerType::class, $planner);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_planner_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('planner/edit.html.twig', [
-            'planner' => $planner,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_planner_delete', methods: ['POST'])]
-    public function delete(Request $request, Planner $planner, EntityManagerInterface $entityManager): Response
-    {
-        $this->denyAccessIfBlocked();
-        if ($this->isCsrfTokenValid('delete'.$planner->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($planner);
+        if ($plannerRecipe && $this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
+            $entityManager->remove($plannerRecipe);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_planner_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_planner');
     }
+
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCK')) {
