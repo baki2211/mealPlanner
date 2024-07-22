@@ -1,0 +1,11 @@
+{# templates/security/blocked.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Account Blocked{% endblock %}
+
+{% block body %}
+    <h1>Your account is blocked</h1>
+    <p>You do not have access to this section of the site.</p>
+    <p>Get in touch with the Admin at admin@admin.com or go back to the <a href="{{path('app_home')}}">Homepage</a>.</p>
+{% endblock %}

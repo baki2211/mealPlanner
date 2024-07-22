@@ -8,4 +8,25 @@
     {{ include('recipe/_form.html.twig') }}
 
     <a href="{{ path('app_recipe_index') }}">back to list</a>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const collectionHolder = document.querySelector('ul.ingredients');
+            const addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.innerText = 'Add an ingredient';
+            collectionHolder.appendChild(addButton);
+
+            addButton.addEventListener('click', function() {
+                const item = document.createElement('li');
+                item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.children.length);
+                collectionHolder.appendChild(item);
+            });
+
+            collectionHolder.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-ingredient')) {
+                    e.target.closest('li').remove();
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -1,26 +1,4 @@
--- phpMyAdmin SQL Dump
--- version 5.1.1deb5ubuntu1
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Jul 17, 2024 at 06:34 PM
--- Server version: 8.0.37-0ubuntu0.22.04.3
--- PHP Version: 8.1.2-1ubuntu2.18
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `mealPlanner`
---
-CREATE DATABASE IF NOT EXISTS `mealPlanner` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `mealPlanner`;
 USE `mealPlanner`;
 
 -- --------------------------------------------------------
@@ -32,7 +10,7 @@ USE `mealPlanner`;
 CREATE TABLE `category` (
   `id` int NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `category`
@@ -53,7 +31,7 @@ INSERT INTO `category` (`id`, `name`) VALUES
 CREATE TABLE `ingredient_list` (
   `id` int NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `ingredient_list`
@@ -76,7 +54,7 @@ CREATE TABLE `messenger_messages` (
   `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
   `available_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
   `delivered_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `messenger_messages`
@@ -95,7 +73,14 @@ INSERT INTO `messenger_messages` (`id`, `body`, `headers`, `queue_name`, `create
 CREATE TABLE `planner` (
   `id` int NOT NULL,
   `user_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `planner`
+--
+
+INSERT INTO `planner` (`id`, `user_id`) VALUES
+(3, 2);
 
 -- --------------------------------------------------------
 
@@ -106,7 +91,14 @@ CREATE TABLE `planner` (
 CREATE TABLE `planner_recipe` (
   `planner_id` int NOT NULL,
   `recipe_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `planner_recipe`
+--
+
+INSERT INTO `planner_recipe` (`planner_id`, `recipe_id`) VALUES
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -117,7 +109,14 @@ CREATE TABLE `planner_recipe` (
 CREATE TABLE `planner_time` (
   `planner_id` int NOT NULL,
   `time_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `planner_time`
+--
+
+INSERT INTO `planner_time` (`planner_id`, `time_id`) VALUES
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -128,7 +127,14 @@ CREATE TABLE `planner_time` (
 CREATE TABLE `planner_week` (
   `planner_id` int NOT NULL,
   `week_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `planner_week`
+--
+
+INSERT INTO `planner_week` (`planner_id`, `week_id`) VALUES
+(3, 1);
 
 -- --------------------------------------------------------
 
@@ -143,7 +149,15 @@ CREATE TABLE `recipe` (
   `description` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `cooking_time` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `calories` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `recipe`
+--
+
+INSERT INTO `recipe` (`id`, `author_id`, `name`, `description`, `cooking_time`, `calories`) VALUES
+(1, 1, 'test', 'qq', 'qq', 'qq'),
+(2, 2, 'test', 'eee', 'eee', 'ee');
 
 -- --------------------------------------------------------
 
@@ -154,7 +168,15 @@ CREATE TABLE `recipe` (
 CREATE TABLE `recipe_category` (
   `recipe_id` int NOT NULL,
   `category_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `recipe_category`
+--
+
+INSERT INTO `recipe_category` (`recipe_id`, `category_id`) VALUES
+(1, 2),
+(2, 3);
 
 -- --------------------------------------------------------
 
@@ -165,7 +187,15 @@ CREATE TABLE `recipe_category` (
 CREATE TABLE `recipe_ingredient_list` (
   `recipe_id` int NOT NULL,
   `ingredient_list_id` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
+
+--
+-- Dumping data for table `recipe_ingredient_list`
+--
+
+INSERT INTO `recipe_ingredient_list` (`recipe_id`, `ingredient_list_id`) VALUES
+(1, 1),
+(2, 1);
 
 -- --------------------------------------------------------
 
@@ -176,7 +206,7 @@ CREATE TABLE `recipe_ingredient_list` (
 CREATE TABLE `time` (
   `id` int NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `time`
@@ -200,14 +230,14 @@ CREATE TABLE `user` (
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `surname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `email`, `roles`, `password`, `name`, `surname`) VALUES
-(1, 'user@user.com', '[\"ROLE_USER\"]', '$2y$13$XU0FZan9POwae2CuK3lg4OeUxTBrcgsuBikVgFR.TG2YwqiP2pfuG', 'user', 'user'),
+(1, 'user@user.com', '[\"ROLE_BLOCK\"]', '$2y$13$XU0FZan9POwae2CuK3lg4OeUxTBrcgsuBikVgFR.TG2YwqiP2pfuG', 'user', 'user'),
 (2, 'admin@admin.com', '[\"ROLE_ADMIN\"]', '$2y$13$Ct1UYrgK.gnJOfCguntXsul3m5.AsaVczaKUeR8iKApQHHRjQjxeK', 'admin', 'admin');
 
 -- --------------------------------------------------------
@@ -219,7 +249,7 @@ INSERT INTO `user` (`id`, `email`, `roles`, `password`, `name`, `surname`) VALUE
 CREATE TABLE `week` (
   `id` int NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 --
 -- Dumping data for table `week`
@@ -358,13 +388,13 @@ ALTER TABLE `messenger_messages`
 -- AUTO_INCREMENT for table `planner`
 --
 ALTER TABLE `planner`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `recipe`
 --
 ALTER TABLE `recipe`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `time`
@@ -401,41 +431,27 @@ ALTER TABLE `planner_recipe`
   ADD CONSTRAINT `FK_97B0DB715346EAE1` FOREIGN KEY (`planner_id`) REFERENCES `planner` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_97B0DB7159D8A214` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `planner_time`
---
+
 ALTER TABLE `planner_time`
   ADD CONSTRAINT `FK_143145E5346EAE1` FOREIGN KEY (`planner_id`) REFERENCES `planner` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_143145E5EEADD3B` FOREIGN KEY (`time_id`) REFERENCES `time` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `planner_week`
---
+
 ALTER TABLE `planner_week`
   ADD CONSTRAINT `FK_358DE5DB5346EAE1` FOREIGN KEY (`planner_id`) REFERENCES `planner` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_358DE5DBC86F3B2F` FOREIGN KEY (`week_id`) REFERENCES `week` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `recipe`
---
+
 ALTER TABLE `recipe`
   ADD CONSTRAINT `FK_DA88B137F675F31B` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`);
 
---
--- Constraints for table `recipe_category`
---
+
 ALTER TABLE `recipe_category`
   ADD CONSTRAINT `FK_70DCBC5F12469DE2` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_70DCBC5F59D8A214` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE;
 
---
--- Constraints for table `recipe_ingredient_list`
---
+
 ALTER TABLE `recipe_ingredient_list`
   ADD CONSTRAINT `FK_73ED1DE23C991D4D` FOREIGN KEY (`ingredient_list_id`) REFERENCES `ingredient_list` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `FK_73ED1DE259D8A214` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`id`) ON DELETE CASCADE;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

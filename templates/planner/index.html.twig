@@ -1,20 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PlannerController!{% endblock %}
+{% block title %}Weekly Planner{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Weekly Planner</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/angelo/Code/mealPlanner/src/Controller/PlannerController.php</code></li>
-        <li>Your template at <code>/home/angelo/Code/mealPlanner/templates/planner/index.html.twig</code></li>
-    </ul>
-</div>
+    <table class="table">
+        <thead>
+            <tr>
+                {% for day in days %}
+                    <th>{{ day.name }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for day in days %}
+                    <td>
+                        {% for time in times %}
+                            <h3>{{ time.name }}</h3>
+                            <div class="{{ time.name|lower }}-recipes">
+                                {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
+                                {% if dayRecipes is empty %}
+                                    <p>No recipes planned for this time</p>
+                                    <a href="{{ path('app_planner_add_recipe', { 'day': day.id, 'time': time.id, 'planner': app.user.planner.id }) }}">Add</a>
+                                {% else %}
+                                    {% for plannerRecipe in dayRecipes %}
+                                        <div>
+                                            {{ plannerRecipe.getRecipe().getName() }}
+                                            <form method="post" action="{{ path('app_planner_remove_recipe', { 'id': plannerRecipe.getId() }) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plannerRecipe.getId()) }}">
+                                                <button type="submit">Remove</button>
+                                            </form>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
 {% endblock %}
