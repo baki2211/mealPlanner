@@ -1,5 +1,12 @@
-{% extends 'base.html.twig' %} {% block title %}Hello HomeController!{% endblock
-%} {% block body %}
+{% extends 'base.html.twig' %} {% block title %}Welcome to your favourite meal planner{% endblock
+%} 
+
+{% block stylesheets %}
+<link href="{{ asset('styles/welcomepage.css') }}" rel="stylesheet"/> 
+{% endblock %}
+
+
+{% block body %} {% include "components/navbar/navbar.html.twig" %}
 <div
   class="p-5 text-center bg-image d-flex justify-content-center align-items-center"
   style="
@@ -14,11 +21,11 @@
         <h1 class="mb-3">Plan your meals!</h1>
         <a
           class="btn btn-outline-light btn-lg me-1"
-          href="/register"
+          href="{{ path("app_register")}}"
           role="button"
           >Sign Up</a
         >
-        <a class="btn btn-outline-light btn-lg ms-1" href="/login" role="button"
+        <a class="btn btn-outline-light btn-lg ms-1" href="{{ path("app_login")}}" role="button"
           >Sign In</a
         >
       </div>
