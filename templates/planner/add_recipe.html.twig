@@ -1,9 +1,15 @@
 {% extends 'base.html.twig' %} {% block title %}Select Recipe{% endblock %} {%
-block body %} {% include "components/navbar/navbar.html.twig" %}
+block body %} {% include "components/navbar/navbar.html.twig" %} {% block
+stylesheets %} {% endblock %}
 
 <div class="container">
-  <h1>Select a Recipe</h1>
-
+  <h1>All Recipes</h1>
+  <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+    >Create new recipe</a
+  >
+  <a href="{{ path('app_recipe_index') }}" class="btn btn-success"
+    >View own recipes</a
+  >
   <form method="post">
     <input type="hidden" name="day" value="{{ dayId }}" />
     <input type="hidden" name="time" value="{{ timeId }}" />
@@ -13,15 +19,24 @@ block body %} {% include "components/navbar/navbar.html.twig" %}
       {% if recipes|length > 0 %} {% for recipe in recipes %}
       <div>
         <div class="card" style="width: 18rem">
-          <img src="..." class="card-img-top" alt="..." />
+          {# <img src="..." class="card-img-top" alt="..." /> #}
           <div class="card-body">
             <h5 class="card-title">{{ recipe.name }}</h5>
             <p class="card-text">{{ recipe.description }}</p>
             <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
             <p class="card-text">Calories: {{ recipe.calories }}</p>
-            <a href="{{ path('app_recipe_show', { id: recipe.id }) }}">show</a>
-            <button type="submit" name="recipe" value="{{ recipe.id }}">
-              Add
+            <a
+              href="{{ path('app_recipe_show', { id: recipe.id }) }}"
+              class="btn btn-primary"
+              >Show details</a
+            >
+            <button
+              type="submit"
+              name="recipe"
+              value="{{ recipe.id }}"
+              class="btn btn-primary"
+            >
+              Add to Planner
             </button>
           </div>
         </div>
@@ -34,4 +49,4 @@ block body %} {% include "components/navbar/navbar.html.twig" %}
     </div>
   </form>
 </div>
-{% include "components/footer/footer.html.twig" %} {% endblock %} {#
+{% include "components/footer/footer.html.twig" %} {% endblock %}
