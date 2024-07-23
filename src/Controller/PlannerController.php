@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Controller;
-
 use App\Entity\Planner;
 use App\Entity\PlannerRecipe;
 use App\Entity\Time;
@@ -20,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 #[Route('/profile/planner')]
 class PlannerController extends AbstractController
 {
@@ -49,7 +46,6 @@ class PlannerController extends AbstractController
             'recipesInPlanner' => $recipesInPlanner,
         ]);
     }
-
     #[Route('/planner/add-recipe', name: 'app_planner_add_recipe')]
     public function addRecipe(
         Request $request,
@@ -59,28 +55,22 @@ class PlannerController extends AbstractController
         $dayId = $request->query->get('day');
         $timeId = $request->query->get('time');
         $plannerId = $request->query->get('planner');
-
         $recipes = $recipeRepository->findAll();
-
         if ($request->isMethod('POST')) {
             $recipeId = $request->request->get('recipe');
             $recipe = $recipeRepository->find($recipeId);
             $planner = $entityManager->getRepository(Planner::class)->find($plannerId);
             $day = $entityManager->getRepository(Week::class)->find($dayId);
             $time = $entityManager->getRepository(Time::class)->find($timeId);
-
             $plannerRecipe = new PlannerRecipe();
             $plannerRecipe->setPlanner($planner);
             $plannerRecipe->setRecipe($recipe);
             $plannerRecipe->setDay($day);
             $plannerRecipe->setTime($time);
-
             $entityManager->persist($plannerRecipe);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_planner');
         }
-
         return $this->render('planner/add_recipe.html.twig', [
             'recipes' => $recipes,
             'dayId' => $dayId,
@@ -88,7 +78,6 @@ class PlannerController extends AbstractController
             'plannerId' => $plannerId,
         ]);
     }
-
     #[Route('/planner/remove-recipe/{id}', name: 'app_planner_remove_recipe', methods: ['POST'])]
     public function removeRecipe(
         $id,
@@ -97,15 +86,12 @@ class PlannerController extends AbstractController
         Request $request
     ): Response {
         $plannerRecipe = $plannerRecipeRepository->find($id);
-
         if ($plannerRecipe && $this->isCsrfTokenValid('delete' . $id, $request->request->get('_token'))) {
             $entityManager->remove($plannerRecipe);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('app_planner');
     }
-
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCK')) {

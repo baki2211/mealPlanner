@@ -1,45 +1,44 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Select Recipe{% endblock %} {%
+block body %} {% include "components/navbar/navbar.html.twig" %} {% block
+stylesheets %} {% endblock %}
 
-{% block title %}Recipe index{% endblock %}
+<div class="container">
+  <h1>Own Recipes</h1>
+  <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+    >Create new recipe</a
+  >
+  <a href="{{ path('app_planner_add_recipe') }}" class="btn btn-success"
+    >View all recipes</a
+  >
 
-{% block body %}
-    <h1>Recipe index</h1>
+  <div class="row row-cols-3">
+    {% if recipes|length > 0 %} {% for recipe in recipes %}
+    <div>
+      <div class="card" style="width: 18rem">
+        {# <img src="..." class="card-img-top" alt="..." /> #}
+        <div class="card-body">
+          <h5 class="card-title">{{ recipe.name }}</h5>
+          <p class="card-text">{{ recipe.description }}</p>
+          <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
+          <p class="card-text">Calories: {{ recipe.calories }}</p>
+          <a
+            href="{{ path('app_recipe_show', { id: recipe.id }) }}"
+            class="btn btn-primary"
+            >Show details</a
+          >
+          <a
+            href="{{ path('app_recipe_edit', { id: recipe.id }) }}"
+            class="btn btn-primary"
+            >Edit</a
+          >
+        </div>
+      </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>CookingTime</th>
-                <th>Calories</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% if recipes|length > 0 %}
-            {% for recipe in recipes %}
-                <tr>
-                    <td>{{ recipe.id }}</td>
-                    <td>{{ recipe.name }}</td>
-                    <td>{{ recipe.description }}</td>
-                    <td>{{ recipe.cookingTime }}</td>
-                    <td>{{ recipe.calories }}</td>
-                    <td>
-                        <a href="{{ path('app_recipe_show', {'id': recipe.id}) }}">show</a>
-                        {% if recipe.author.id == app.user.id %}
-                            <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endif %}
-        </tbody>
-    </table>
+    {% endfor %} {% else %}
+    <p>No records found</p>
 
-    <a href="{{ path('app_recipe_new') }}">Create new</a>
-{% endblock %}
+    {% endif %}
+  </div>
+</div>
+{% include "components/footer/footer.html.twig" %} {% endblock %}
