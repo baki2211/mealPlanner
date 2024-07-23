@@ -3,30 +3,83 @@
 {% block title %}New Recipe{% endblock %}
 
 {% block body %}
-    <h1>Create new Recipe</h1>
+<h1>Create new Recipe</h1>
+{{ form_start(form) }}
 
-    {{ include('recipe/_form.html.twig') }}
+<div>
+    {{ form_label(form.name) }}
+    {{ form_widget(form.name) }}
+    {{ form_errors(form.name) }}
+</div>
 
-    <a href="{{ path('app_recipe_index') }}">back to list</a>
-     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const collectionHolder = document.querySelector('ul.ingredients');
-            const addButton = document.createElement('button');
-            addButton.type = 'button';
-            addButton.innerText = 'Add an ingredient';
-            collectionHolder.appendChild(addButton);
+<div>
+    {{ form_label(form.description) }}
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+</div>
 
-            addButton.addEventListener('click', function() {
-                const item = document.createElement('li');
-                item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.children.length);
-                collectionHolder.appendChild(item);
-            });
+<div>
+    {{ form_label(form.cookingTime) }}
+    {{ form_widget(form.cookingTime) }}
+    {{ form_errors(form.cookingTime) }}
+</div>
 
-            collectionHolder.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-ingredient')) {
-                    e.target.closest('li').remove();
-                }
-            });
+<div>
+    {{ form_label(form.calories) }}
+    {{ form_widget(form.calories) }}
+    {{ form_errors(form.calories) }}
+</div>
+
+<div>
+    {{ form_label(form.category) }}
+    {{ form_widget(form.category) }}
+    {{ form_errors(form.category) }}
+</div>
+
+<p>Ingredients</p>
+<ul id="ingredients-list" data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}">
+    {% for ingredient in form.ingredients %}
+    <li>
+        {{ form_widget(ingredient) }}
+        {{ form_errors(ingredient) }}
+        <button type="button" class="remove-ingredient">Remove</button>
+    </li>
+    {% endfor %}
+</ul>
+<button type="button" id="add-ingredient">Add Ingredient</button>
+
+<div>
+    {{ form_widget(form.submit) }} {# Note the use of 'submit' here #}
+</div>
+
+{{ form_end(form) }}
+
+<a href="{{ path('app_recipe_index') }}">back to list</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ingredientsList = document.getElementById('ingredients-list');
+        var addIngredientButton = document.getElementById('add-ingredient');
+
+        addIngredientButton.addEventListener('click', function () {
+            var newWidget = ingredientsList.dataset.prototype;
+            newWidget = newWidget.replace(/__name__/g, ingredientsList.children.length);
+            var newElem = document.createElement('li');
+            newElem.innerHTML = newWidget;
+            ingredientsList.appendChild(newElem);
+            attachRemoveEvent(newElem);
         });
-    </script>
+
+        function attachRemoveEvent(element) {
+            element.querySelector('.remove-ingredient').addEventListener('click', function () {
+                element.remove();
+            });
+        }
+
+        // Attach remove event to existing elements
+        ingredientsList.querySelectorAll('li').forEach(function (element) {
+            attachRemoveEvent(element);
+        });
+    });
+</script>
 {% endblock %}

@@ -1,6 +1,8 @@
 <?php
+
 namespace App\Controller;
 
+use App\Entity\IngredientList;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
@@ -39,6 +41,19 @@ class RecipeController extends AbstractController
                 throw new AccessDeniedException('You must be logged in to create a recipe.');
             }
             $recipe->setAuthor($user);
+
+            // Check for existing ingredients
+            foreach ($recipe->getIngredients() as $ingredient) {
+                $existingIngredient = $entityManager->getRepository(IngredientList::class)->findOneBy(['name' => $ingredient->getName()]);
+                if ($existingIngredient) {
+                    // Replace with existing ingredient
+                    $recipe->removeIngredient($ingredient);
+                    $recipe->addIngredient($existingIngredient);
+                } else {
+                    $entityManager->persist($ingredient);
+                }
+            }
+
             $entityManager->persist($recipe);
             $entityManager->flush();
 
