@@ -4,12 +4,8 @@ stylesheets %} {% endblock %}
 
 <div class="container">
   <h1>Own Recipes</h1>
-  <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
-    >Create new recipe</a
-  >
-  <a href="{{ path('app_planner_add_recipe') }}" class="btn btn-success"
-    >View all recipes</a
-  >
+  <a href="{{ path('app_recipe_new') }}" class="btn btn-success">Create new recipe</a>
+  <a href="{{ path('app_planner_add_recipe') }}" class="btn btn-success">View all recipes</a>
 
   <div class="row row-cols-3">
     {% if recipes|length > 0 %} {% for recipe in recipes %}
@@ -21,16 +17,11 @@ stylesheets %} {% endblock %}
           <p class="card-text">{{ recipe.description }}</p>
           <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
           <p class="card-text">Calories: {{ recipe.calories }}</p>
-          <a
-            href="{{ path('app_recipe_show', { id: recipe.id }) }}"
-            class="btn btn-primary"
-            >Show details</a
-          >
-          <a
-            href="{{ path('app_recipe_edit', { id: recipe.id }) }}"
-            class="btn btn-primary"
-            >Edit</a
-          >
+          <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="btn btn-primary">Show details</a>
+          {% if recipe.author.id == app.user.id %}
+          <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="btn btn-warning">Edit</a>
+
+          {% endif %}
         </div>
       </div>
     </div>
