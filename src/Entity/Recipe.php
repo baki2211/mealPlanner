@@ -40,7 +40,8 @@ class Recipe
     /**
      * @var Collection<int, IngredientList>
      */
-    #[ORM\ManyToMany(targetEntity: IngredientList::class, inversedBy: 'recipes')]
+    #[ORM\ManyToMany(targetEntity: IngredientList::class, cascade: ["persist"])]
+    #[ORM\JoinTable(name: "recipe_ingredients")]
     private Collection $ingredients;
 
     /**
@@ -158,16 +159,17 @@ class Recipe
         return $this->ingredients;
     }
 
-    public function addIngredient(IngredientList $ingredient): static
+    public function addIngredient(IngredientList $ingredient): self
     {
         if (!$this->ingredients->contains($ingredient)) {
             $this->ingredients->add($ingredient);
+          // $this->ingredients[] = $ingredient;
         }
 
         return $this;
     }
 
-    public function removeIngredient(IngredientList $ingredient): static
+    public function removeIngredient(IngredientList $ingredient): self
     {
         $this->ingredients->removeElement($ingredient);
 
