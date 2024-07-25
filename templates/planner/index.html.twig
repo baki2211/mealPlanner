@@ -1,43 +1,43 @@
-{# templates/planner/index.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Weekly Planner{% endblock %}
 
 {% block stylesheets %}
-    {# Include Bootstrap CSS #}
-    <link href="{{ asset('styles/welcomepage.css') }}" rel="stylesheet"/>
+ <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ <link href="{{ asset('styles/welcomepage.css') }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block body %}
-    {% include "components/navbar/navbar.html.twig" %}
+ {% include "components/navbar/navbar.html.twig" %}
 
     <div class="container mt-5">
         <div class="text-center my-4">
             <h1 class="display-4">Weekly Planner</h1>
             <p class="lead">Plan your meals efficiently and stay organized</p>
         </div>
-
-        <div class="row">
+         <div class="row">
             {% for day in days %}
                 <div class="col-md-4 mb-4">
-                    <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm">
                         <div class="card-header text-center" style="background-color: #C1D8C3;">
                             <h4 class="my-0">{{ day.name }}</h4>
-                        </div>
+                              </div>
                         <div class="card-body">
                             {% for time in times %}
-                                <h5 class="mt-3">{{ time.name }}</h5>
+                             <h5 class="mt-3">{{ time.name }}</h5>
                                 <div class="{{ time.name|lower }}-recipes mb-3">
                                     {% set dayRecipes = recipesInPlanner[day.id][time.id] ?? [] %}
                                     {% if dayRecipes is empty %}
-                                        <p class="text-muted">No recipes planned for this time</p>
-                                        <button class="btn btn-sm btn-outline-primary">Add</button>
-                                    {% else %}
-                                        {% for recipe in dayRecipes %}
+                                    <p class="text-muted">No recipes planned for this time</p>
+<a href="{{ path('app_planner_add_recipe', { 'day': day.id, 'time': time.id, 'planner': app.user.planner.id }) }}" class="btn btn-sm btn-outline-primary">Add</a>
+                                        {% else %}
+                                        {% for plannerRecipe in dayRecipes %}
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <span>{{ recipe.name }}</span>
-                                                <button class="btn btn-sm btn-outline-danger">Remove</button>
+                                                {{ plannerRecipe.getRecipe().getName() }}
+                                                <form method="post" action="{{ path('app_planner_remove_recipe', { 'id': plannerRecipe.getId() }) }}">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ plannerRecipe.getId()) }}">
+                                                <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
+                                            </form>
                                             </div>
                                         {% endfor %}
                                     {% endif %}
@@ -49,11 +49,5 @@
             {% endfor %}
         </div>
     </div>
-
-    {% include "components/footer/footer.html.twig" %}
+     {% include "components/footer/footer.html.twig" %}
 {% endblock %}
-
-
-
-
-
