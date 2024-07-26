@@ -6,6 +6,7 @@ use App\Entity\IngredientList;
 use App\Entity\Recipe;
 use App\Entity\User;
 use App\Form\RecipeType;
+use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -107,6 +108,21 @@ class RecipeController extends AbstractController
 
         return $this->redirectToRoute('app_recipe_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/filter/{id}', name: 'app_prod_filtered', methods: ['GET'])]
+    public function filterByCategory(RecipeRepository $recipeRepository, CategoryRepository $categoryRepository, $id): Response
+    {
+        $category = $categoryRepository->find($id);
+        if (!$category) {
+            throw $this->createNotFoundException('Category not found');
+        }
+        $recipes = $category->getRecipes();
+        return $this->render('recipe/filter.html.twig', [
+            'recipes' => $recipes,
+    ]);
+}
+    
+
     #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
     public function filterByUser(RecipeRepository $recipeRepository, UserRepository $userRepository): Response
     {
@@ -125,10 +141,18 @@ class RecipeController extends AbstractController
             'recipes' => $recipes,
         ]);
     }
+
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCKED')) {
             throw new AccessDeniedException('Access denied. Your account is blocked.');
+        
+
+        
         }
+
     }
-}
+        
+    
+  }
+
