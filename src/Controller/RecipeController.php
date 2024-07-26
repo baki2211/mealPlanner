@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\IngredientList;
 use App\Entity\Recipe;
+use App\Entity\User;
 use App\Form\RecipeType;
 use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
@@ -107,6 +108,7 @@ class RecipeController extends AbstractController
 
         return $this->redirectToRoute('app_recipe_index', [], Response::HTTP_SEE_OTHER);
     }
+
     #[Route('/filter/{id}', name: 'app_prod_filtered', methods: ['GET'])]
     public function filterByCategory(RecipeRepository $recipeRepository, CategoryRepository $categoryRepository, $id): Response
     {
@@ -120,6 +122,26 @@ class RecipeController extends AbstractController
     ]);
 }
     
+
+    #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
+    public function filterByUser(RecipeRepository $recipeRepository, UserRepository $userRepository): Response
+    {
+        // Get the currently logged-in user
+        $user = $this->$userRepository->getUser();
+
+        // Check if the user is authenticated
+        if (!$user) {
+            throw $this->createAccessDeniedException('You are not logged in.');
+        }
+
+        // Get recipes for the current user
+        $recipes = $user->getRecipes();
+
+        return $this->render('recipe/personal_recipes.html.twig', [
+            'recipes' => $recipes,
+        ]);
+    }
+
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCKED')) {
