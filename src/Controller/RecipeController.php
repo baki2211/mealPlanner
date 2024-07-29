@@ -21,12 +21,14 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class RecipeController extends AbstractController
 {
     #[Route('/', name: 'app_recipe_index', methods: ['GET'])]
-    public function index(RecipeRepository $recipeRepository, UserRepository $userRepository): Response
+    public function index(RecipeRepository $recipeRepository, UserRepository $userRepository, CategoryRepository $categoryRepository): Response
     {
         $this->denyAccessIfBlocked();
+       
         return $this->render('recipe/index.html.twig', [
             'recipes' => $recipeRepository->findAll(),
             'users' => $userRepository->findAll(),
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
 
@@ -123,20 +125,16 @@ class RecipeController extends AbstractController
 }
     
 
-#[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
-public function filterByUser(
-    RecipeRepository $recipeRepository,
-    Security $security
-): Response {
-    // Get the currently logged-in user
+    #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
+    public function filterByUser(RecipeRepository $recipeRepository, Security $security): Response 
+    {
+   
     $user = $security->getUser();
 
-    // Check if the user is authenticated and a valid User object
     if (!$user instanceof User) {
         throw $this->createAccessDeniedException('You are not logged in.');
     }
 
-    // Get recipes for the current user
     $recipes = $recipeRepository->findByAuthor($user);
 
     return $this->render('recipe/personal_recipes.html.twig', [
