@@ -2,14 +2,15 @@
 block body %} {% include "components/navbar/navbar.html.twig" %} {% block
 stylesheets %} {% endblock %}
 
-<div class="container">
-  <h1>All Recipes</h1>
-  <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
-    >Create new recipe</a
-  >
-  <a href="{{ path('app_recipe_index') }}" class="btn btn-success"
-    >View own recipes</a
-  >
+<div class="container mt-5">
+  <div class="text-center my-4">
+    <h1 class="display-4">Add a Recipe</h1>
+    <p class="lead">Add a recipe to your Planner</p>
+    <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+      >Create New Recipe</a
+    >
+  </div>
+
   <form method="post">
     <input type="hidden" name="day" value="{{ dayId }}" />
     <input type="hidden" name="time" value="{{ timeId }}" />
@@ -17,7 +18,7 @@ stylesheets %} {% endblock %}
 
     <div class="row row-cols-3">
       {% if recipes|length > 0 %} {% for recipe in recipes %}
-      <div>
+      <div class="my-5">
         <div class="card" style="width: 18rem">
           {# <img src="..." class="card-img-top" alt="..." /> #}
           <div class="card-body">
@@ -27,8 +28,8 @@ stylesheets %} {% endblock %}
             <p class="card-text">Calories: {{ recipe.calories }}</p>
             <a
               href="{{ path('app_recipe_show', { id: recipe.id }) }}"
-              class="btn btn-primary"
-              >Show details</a
+              class="btn btn-warning"
+              >Details</a
             >
             <button
               type="submit"
