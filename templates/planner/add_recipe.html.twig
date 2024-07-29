@@ -1,47 +1,53 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Select Recipe{% endblock %} {%
+block body %} {% include "components/navbar/navbar.html.twig" %} {% block
+stylesheets %} {% endblock %}
 
-{% block title %}Select Recipe{% endblock %}
+<div class="container mt-5">
+  <div class="text-center my-4">
+    <h1 class="display-4">Add a Recipe</h1>
+    <p class="lead">Add a recipe to your Planner</p>
+    <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+      >Create New Recipe</a
+    >
+  </div>
 
-{% block body %}
-    <h1>Select a Recipe</h1>
+  <form method="post">
+    <input type="hidden" name="day" value="{{ dayId }}" />
+    <input type="hidden" name="time" value="{{ timeId }}" />
+    <input type="hidden" name="planner" value="{{ plannerId }}" />
 
-    <form method="post">
-        <input type="hidden" name="day" value="{{ dayId }}">
-        <input type="hidden" name="time" value="{{ timeId }}">
-        <input type="hidden" name="planner" value="{{ plannerId }}">
-        
-        <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>CookingTime</th>
-                <th>Calories</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-                {% if recipes|length > 0 %}
-            {% for recipe in recipes %}
-                <tr>
-                    <td>{{ recipe.id }}</td>
-                    <td>{{ recipe.name }}</td>
-                    <td>{{ recipe.description }}</td>
-                    <td>{{ recipe.cookingTime }}</td>
-                    <td>{{ recipe.calories }}</td>
-                    <td>
-                        <a href="{{ path('app_recipe_show', {'id': recipe.id}) }}">show</a>
-                        <button type="submit" name="recipe" value="{{ recipe.id }}">Add</button>
-                    </td>
-                </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6">No records found</td>
-            </tr>
-        {% endif %}
-        </tbody>
-    </table>
-    </form> 
-{% endblock %}
+    <div class="row row-cols-3">
+      {% if recipes|length > 0 %} {% for recipe in recipes %}
+      <div class="my-5">
+        <div class="card" style="width: 18rem">
+          {# <img src="..." class="card-img-top" alt="..." /> #}
+          <div class="card-body">
+            <h5 class="card-title">{{ recipe.name }}</h5>
+            <p class="card-text">{{ recipe.description }}</p>
+            <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
+            <p class="card-text">Calories: {{ recipe.calories }}</p>
+            <a
+              href="{{ path('app_recipe_show', { id: recipe.id }) }}"
+              class="btn btn-warning"
+              >Details</a
+            >
+            <button
+              type="submit"
+              name="recipe"
+              value="{{ recipe.id }}"
+              class="btn btn-primary"
+            >
+              Add to Planner
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {% endfor %} {% else %}
+      <p>No records found</p>
+
+      {% endif %}
+    </div>
+  </form>
+</div>
+{% include "components/footer/footer.html.twig" %} {% endblock %}

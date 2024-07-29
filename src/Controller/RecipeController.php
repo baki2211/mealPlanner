@@ -1,12 +1,17 @@
 <?php
+
 namespace App\Controller;
 
+use App\Entity\IngredientList;
 use App\Entity\Recipe;
+use App\Entity\User;
 use App\Form\RecipeType;
+use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,6 +44,19 @@ class RecipeController extends AbstractController
                 throw new AccessDeniedException('You must be logged in to create a recipe.');
             }
             $recipe->setAuthor($user);
+
+            // Check for existing ingredients
+            foreach ($recipe->getIngredients() as $ingredient) {
+                $existingIngredient = $entityManager->getRepository(IngredientList::class)->findOneBy(['name' => $ingredient->getName()]);
+                if ($existingIngredient) {
+                    // Replace with existing ingredient
+                    $recipe->removeIngredient($ingredient);
+                    $recipe->addIngredient($existingIngredient);
+                } else {
+                    $entityManager->persist($ingredient);
+                }
+            }
+
             $entityManager->persist($recipe);
             $entityManager->flush();
 
@@ -91,10 +109,50 @@ class RecipeController extends AbstractController
         return $this->redirectToRoute('app_recipe_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/filter/{id}', name: 'app_prod_filtered', methods: ['GET'])]
+    public function filterByCategory(RecipeRepository $recipeRepository, CategoryRepository $categoryRepository, $id): Response
+    {
+        $category = $categoryRepository->find($id);
+        if (!$category) {
+            throw $this->createNotFoundException('Category not found');
+        }
+        $recipes = $category->getRecipes();
+        return $this->render('recipe/filter.html.twig', [
+            'recipes' => $recipes,
+    ]);
+}
+    
+
+    #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
+    public function filterByUser(RecipeRepository $recipeRepository, UserRepository $userRepository): Response
+    {
+        // Get the currently logged-in user
+        $user = $this->$userRepository->getUser();
+
+        // Check if the user is authenticated
+        if (!$user) {
+            throw $this->createAccessDeniedException('You are not logged in.');
+        }
+
+        // Get recipes for the current user
+        $recipes = $user->getRecipes();
+
+        return $this->render('recipe/personal_recipes.html.twig', [
+            'recipes' => $recipes,
+        ]);
+    }
+
     private function denyAccessIfBlocked(): void
     {
         if ($this->isGranted('ROLE_BLOCKED')) {
             throw new AccessDeniedException('Access denied. Your account is blocked.');
+        
+
+        
         }
+
     }
-}
+        
+    
+  }
+

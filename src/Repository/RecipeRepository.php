@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Recipe;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +16,15 @@ class RecipeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Recipe::class);
     }
+
+    public function findByAuthor(User $user): array
+{
+    return $this->createQueryBuilder('r')
+        ->andWhere('r.author = :user')
+        ->setParameter('user', $user)
+        ->getQuery()
+        ->getResult();
+}
 
     //    /**
     //     * @return Recipe[] Returns an array of Recipe objects

@@ -2,31 +2,110 @@
 
 {% block title %}New Recipe{% endblock %}
 
+{% block stylesheets %}
+    {# Include Bootstrap CSS #}
+    <link href="{{ asset('styles/welcomepage.css') }}" rel="stylesheet"/>
+{% endblock %}
+
 {% block body %}
-    <h1>Create new Recipe</h1>
+{% include "components/navbar/navbar.html.twig" %}
 
-    {{ include('recipe/_form.html.twig') }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header text-center" style="background-color: #C1D8C3;">
+                    <h1 class="my-0">Create New Recipe</h1>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
 
-    <a href="{{ path('app_recipe_index') }}">back to list</a>
-     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const collectionHolder = document.querySelector('ul.ingredients');
-            const addButton = document.createElement('button');
-            addButton.type = 'button';
-            addButton.innerText = 'Add an ingredient';
-            collectionHolder.appendChild(addButton);
+                    <div class="form-group">
+                        {{ form_label(form.name, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.name) }}
+                    </div>
 
-            addButton.addEventListener('click', function() {
-                const item = document.createElement('li');
-                item.innerHTML = collectionHolder.dataset.prototype.replace(/__name__/g, collectionHolder.children.length);
-                collectionHolder.appendChild(item);
-            });
+                    <div class="form-group">
+                        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.description) }}
+                    </div>
 
-            collectionHolder.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-ingredient')) {
-                    e.target.closest('li').remove();
-                }
-            });
+                    <div class="form-group">
+                        {{ form_label(form.cookingTime, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.cookingTime, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.cookingTime) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.calories, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.calories, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.calories) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.category, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form.category, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(form.category) }}
+                    </div>
+
+                    <p class="mt-4"></p>
+                    <ul id="ingredients-list" class="list-unstyled" data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}">
+                        {% for ingredient in form.ingredients %}
+                            <li class="mb-2">
+                                <div class="d-flex">
+                                    {{ form_widget(ingredient, {'attr': {'class': 'form-control me-2'}}) }}
+                                    <button type="button" class="btn btn-outline-danger remove-ingredient">Remove</button>
+                                </div>
+                                {{ form_errors(ingredient) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <button type="button" id="add-ingredient" class="btn btn-outline-primary mt-2">Add Ingredient</button>
+
+                    <div class="mt-4">
+                        {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary btn-block'}}) }}
+                    </div>
+
+                    {{ form_end(form) }}
+
+                    <div class="text-center mt-3">
+                        <a href="{{ path('app_recipe_index') }}" class="btn btn-outline-secondary">Back to list</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "components/footer/footer.html.twig" %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ingredientsList = document.getElementById('ingredients-list');
+        var addIngredientButton = document.getElementById('add-ingredient');
+
+        addIngredientButton.addEventListener('click', function () {
+            var newWidget = ingredientsList.dataset.prototype;
+            newWidget = newWidget.replace(/__name__/g, ingredientsList.children.length);
+            var newElem = document.createElement('li');
+            newElem.classList.add('mb-2');
+            newElem.innerHTML = '<div class="d-flex">' + newWidget + '<button type="button" class="btn btn-outline-danger remove-ingredient ms-2">Remove</button></div>';
+            ingredientsList.appendChild(newElem);
+            attachRemoveEvent(newElem);
         });
-    </script>
+
+        function attachRemoveEvent(element) {
+            element.querySelector('.remove-ingredient').addEventListener('click', function () {
+                element.remove();
+            });
+        }
+
+        // Attach remove event to existing elements
+        ingredientsList.querySelectorAll('li').forEach(function (element) {
+            attachRemoveEvent(element);
+        });
+    });
+</script>
 {% endblock %}
