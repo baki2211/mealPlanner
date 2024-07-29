@@ -123,24 +123,26 @@ class RecipeController extends AbstractController
 }
     
 
-    #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
-    public function filterByUser(RecipeRepository $recipeRepository, UserRepository $userRepository): Response
-    {
-        // Get the currently logged-in user
-        $user = $this->$userRepository->getUser();
+#[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
+public function filterByUser(
+    RecipeRepository $recipeRepository,
+    Security $security
+): Response {
+    // Get the currently logged-in user
+    $user = $security->getUser();
 
-        // Check if the user is authenticated
-        if (!$user) {
-            throw $this->createAccessDeniedException('You are not logged in.');
-        }
-
-        // Get recipes for the current user
-        $recipes = $user->getRecipes();
-
-        return $this->render('recipe/personal_recipes.html.twig', [
-            'recipes' => $recipes,
-        ]);
+    // Check if the user is authenticated and a valid User object
+    if (!$user instanceof User) {
+        throw $this->createAccessDeniedException('You are not logged in.');
     }
+
+    // Get recipes for the current user
+    $recipes = $recipeRepository->findByAuthor($user);
+
+    return $this->render('recipe/personal_recipes.html.twig', [
+        'recipes' => $recipes,
+    ]);
+}
 
     private function denyAccessIfBlocked(): void
     {
