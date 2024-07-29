@@ -1,11 +1,14 @@
 <?php
+
 namespace App\Controller;
+
 use App\Entity\Planner;
 use App\Entity\PlannerRecipe;
 use App\Entity\Time;
 use App\Entity\User;
 use App\Entity\Week;
 use App\Form\PlannerType;
+use App\Repository\CategoryRepository;
 use App\Repository\PlannerRecipeRepository;
 use App\Repository\PlannerRepository;
 use App\Repository\RecipeRepository;
@@ -18,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 #[Route('/profile/planner')]
 class PlannerController extends AbstractController
 {
@@ -50,7 +54,7 @@ class PlannerController extends AbstractController
     public function addRecipe(
         Request $request,
         RecipeRepository $recipeRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager, CategoryRepository $categoryRepository
     ): Response {
         $dayId = $request->query->get('day');
         $timeId = $request->query->get('time');
@@ -76,6 +80,7 @@ class PlannerController extends AbstractController
             'dayId' => $dayId,
             'timeId' => $timeId,
             'plannerId' => $plannerId,
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
     #[Route('/planner/remove-recipe/{id}', name: 'app_planner_remove_recipe', methods: ['POST'])]
