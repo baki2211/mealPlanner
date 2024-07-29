@@ -16,13 +16,13 @@ class PlannerRecipe
     #[ORM\ManyToOne(targetEntity: Planner::class, inversedBy: 'plannerRecipes')]
     private ?Planner $planner = null;
 
-    #[ORM\ManyToOne(targetEntity: Recipe::class)]
+    #[ORM\ManyToOne(targetEntity: Recipe::class, inversedBy: 'plannerRecipes')]
     private ?Recipe $recipe = null;
 
-    #[ORM\ManyToOne(targetEntity: Week::class)]
+    #[ORM\ManyToOne(targetEntity: Week::class, inversedBy: 'plannerRecipes')]
     private ?Week $day = null;
 
-    #[ORM\ManyToOne(targetEntity: Time::class)]
+    #[ORM\ManyToOne(targetEntity: Time::class, inversedBy: 'plannerRecipes')]
     private ?Time $time = null;
 
     public function getId(): ?int

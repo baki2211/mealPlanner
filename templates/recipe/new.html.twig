@@ -3,7 +3,6 @@
 {% block title %}New Recipe{% endblock %}
 
 {% block stylesheets %}
-    {# Include Bootstrap CSS #}
     <link href="{{ asset('styles/welcomepage.css') }}" rel="stylesheet"/>
 {% endblock %}
 
@@ -56,9 +55,9 @@
                             <li class="mb-2">
                                 <div class="d-flex">
                                     {{ form_widget(ingredient, {'attr': {'class': 'form-control me-2'}}) }}
+                                    {{ form_errors(ingredient) }}
                                     <button type="button" class="btn btn-outline-danger remove-ingredient">Remove</button>
                                 </div>
-                                {{ form_errors(ingredient) }}
                             </li>
                         {% endfor %}
                     </ul>
@@ -86,15 +85,23 @@
         var ingredientsList = document.getElementById('ingredients-list');
         var addIngredientButton = document.getElementById('add-ingredient');
 
-        addIngredientButton.addEventListener('click', function () {
+        if (!ingredientsList || !addIngredientButton) {
+            console.error('Elements with IDs "ingredients-list" or "add-ingredient" are not found.');
+            return;
+        }
+
+        function addIngredient() {
             var newWidget = ingredientsList.dataset.prototype;
             newWidget = newWidget.replace(/__name__/g, ingredientsList.children.length);
+            
             var newElem = document.createElement('li');
             newElem.classList.add('mb-2');
             newElem.innerHTML = '<div class="d-flex">' + newWidget + '<button type="button" class="btn btn-outline-danger remove-ingredient ms-2">Remove</button></div>';
+            
             ingredientsList.appendChild(newElem);
+
             attachRemoveEvent(newElem);
-        });
+        }
 
         function attachRemoveEvent(element) {
             element.querySelector('.remove-ingredient').addEventListener('click', function () {
@@ -102,10 +109,12 @@
             });
         }
 
-        // Attach remove event to existing elements
+        addIngredientButton.addEventListener('click', addIngredient);
+
         ingredientsList.querySelectorAll('li').forEach(function (element) {
             attachRemoveEvent(element);
         });
     });
 </script>
+
 {% endblock %}

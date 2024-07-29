@@ -32,6 +32,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+    public function getUser(): ?User
+    {
+        return $this->security->getUser(); 
+    }
 
     //    /**
     //     * @return User[] Returns an array of User objects

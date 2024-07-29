@@ -40,7 +40,7 @@ class RecipeType extends AbstractType
                 'prototype' => true,
                 
             ])
-            ->add('submit', SubmitType::class, [ // Note the use of 'submit' as the field name
+            ->add('submit', SubmitType::class, [ 
                 'label' => 'Save Recipe',
             ]);
     }

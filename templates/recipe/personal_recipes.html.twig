@@ -7,9 +7,12 @@ stylesheets %} {% endblock %}
   <a href="{{ path('app_recipe_new') }}" class="btn btn-success">Create new recipe</a>
   <a href="{{ path('app_recipe_index') }}" class="btn btn-success">View All recipes</a>
 
-  <div class="row row-cols-3">
-    {% if recipes|length > 0 %} {% for recipe in recipes %}
-    <div>
+ {% if recipes is empty %}
+        <p>No recipes found.</p>
+    {% else %}
+             <div class="row row-cols-3">
+            {% for recipe in recipes %}
+                <div>
       <div class="card" style="width: 18rem">
         {# <img src="..." class="card-img-top" alt="..." /> #}
         <div class="card-body">
@@ -25,10 +28,7 @@ stylesheets %} {% endblock %}
         </div>
       </div>
     </div>
-
-    {% endfor %} {% else %}
-    <p>No records found</p>
-
+            {% endfor %}
     {% endif %}
   </div>
 </div>
