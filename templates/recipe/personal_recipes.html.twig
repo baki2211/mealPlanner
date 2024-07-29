@@ -20,10 +20,17 @@ stylesheets %} {% endblock %}
           <p class="card-text">{{ recipe.description }}</p>
           <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
           <p class="card-text">Calories: {{ recipe.calories }}</p>
-          <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="btn btn-primary">Show details</a>
+          <a
+            href="{{ path('app_recipe_show', { id: recipe.id }) }}"
+            class="btn btn-primary"
+            >Show details</a
+          >
           {% if recipe.author.id == app.user.id %}
-          <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="btn btn-warning">Edit</a>
-
+          <a
+            href="{{ path('app_recipe_edit', { id: recipe.id }) }}"
+            class="btn btn-warning"
+            >Edit</a
+          >
           {% endif %}
         </div>
       </div>

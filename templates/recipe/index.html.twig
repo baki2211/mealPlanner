@@ -2,15 +2,23 @@
 block body %} {% include "components/navbar/navbar.html.twig" %} {% block
 stylesheets %} {% endblock %}
 
-<div class="container">
-  <h1>All Recipes</h1>
-  <a href="{{ path('app_recipe_new') }}" class="btn btn-success">Create new recipe</a>
-  {% if app.user %}
-            <a href="{{ path('app_my_recipes') }}" class="btn btn-success">View your recipes</a>
-        {% endif %}
-  <div class="row row-cols-3 row-gap-3 mt-3 mb-3">
+<div class="container mt-5">
+  <div class="text-center my-4">
+    <h1 class="display-4">All Recipes</h1>
+    <p class="lead">Browse all recipes created by you and other users</p>
+    <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+      >Create new recipe</a
+    >
+    {% if app.user %}
+    <a href="{{ path('app_my_recipes') }}" class="btn btn-success"
+      >My Recipes</a
+    >
+    {% endif %}
+  </div>
+
+  <div class="row row-cols-3">
     {% if recipes|length > 0 %} {% for recipe in recipes %}
-    <div>
+    <div class="my-5">
       <div class="card" style="width: 18rem">
         {# <img src="..." class="card-img-top" alt="..." /> #}
         <div class="card-body">
@@ -18,9 +26,17 @@ stylesheets %} {% endblock %}
           <p class="card-text">{{ recipe.description }}</p>
           <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
           <p class="card-text">Calories: {{ recipe.calories }}</p>
-          <a href="{{ path('app_recipe_show', { id: recipe.id }) }}" class="btn btn-primary">Show details</a>
+          <a
+            href="{{ path('app_recipe_show', { id: recipe.id }) }}"
+            class="btn btn-primary"
+            >Show details</a
+          >
           {% if recipe.author.id == app.user.id %}
-          <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}" class="btn btn-warning">Edit</a>
+          <a
+            href="{{ path('app_recipe_edit', { id: recipe.id }) }}"
+            class="btn btn-warning"
+            >Edit</a
+          >
 
           {% endif %}
         </div>
