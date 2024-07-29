@@ -1,49 +1,48 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Recipe{% endblock %} {% block
+body %} {% include "components/navbar/navbar.html.twig" %}
 
-{% block title %}Recipe{% endblock %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header text-center" style="background-color: #c1d8c3">
+          <h1 class="my-0">Recipe Details</h1>
+        </div>
+        <div class="card-body">
+          <h2 class="display-5 text-center">
+            {{ recipe.name }}
+          </h2>
 
-{% block body %}
-    <h1>Recipe</h1>
+          <h4>Steps</h4>
+          <p>
+            {{ recipe.description }}
+          </p>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ recipe.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ recipe.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ recipe.description }}</td>
-            </tr>
-            <tr>
-                <th>CookingTime</th>
-                <td>{{ recipe.cookingTime }}</td>
-            </tr>
-            <tr>
-                <th>Calories</th>
-                <td>{{ recipe.calories }}</td>
-            </tr>
-            <tr>
-                <th>Author</th>
-                <td>{{ recipe.author.name }}</td>
-            </tr>
-            <tr>
-                <th>Ingredients</th>
-                <td>ingredient list</td>
-            </tr>
-        </tbody>
-    </table>
+          <h4>Time</h4>
+          <p>
+            {{ recipe.cookingTime }}
+          </p>
 
-    <a href="{{ path('app_recipe_index') }}">back to list</a>
+          <h4>Calories</h4>
+          <p>{{ recipe.calories }}</p>
 
-    {% if recipe.author.id == app.user.id %}
-        <a href="{{ path('app_recipe_edit', {'id': recipe.id}) }}">edit</a>
-         {{ include('recipe/_delete_form.html.twig') }}
-    {% endif %}
+          <h4>Created by</h4>
+          <p>
+            {{ recipe.author.name }}
+          </p>
 
-   
-{% endblock %}
+          {% if recipe.author.id == app.user.id %}
+          <a href="{{ path('app_recipe_edit', { id: recipe.id }) }}">edit</a>
+          {{ include("recipe/_delete_form.html.twig") }}
+          {% endif %}
+
+          <p>
+            <a href="{{ path('app_recipe_index') }}">back to list</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "components/footer/footer.html.twig" %} {% endblock %}
