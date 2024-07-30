@@ -28,7 +28,7 @@ class Recipe
     #[ORM\Column(length: 255)]
     private ?string $calories = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'recipes')]
+    #[ORM\ManyToOne(inversedBy: 'recipes', targetEntity: User::class)]
     private ?User $author = null;
 
     /**
@@ -40,14 +40,14 @@ class Recipe
     /**
      * @var Collection<int, IngredientList>
      */
-    #[ORM\ManyToMany(targetEntity: IngredientList::class, mappedBy: 'recipes', cascade: ["persist"])]
+    #[ORM\ManyToMany(targetEntity: IngredientList::class, inversedBy: 'recipes', cascade: ["persist"])]
     #[ORM\JoinTable(name: "recipe_ingredients")]
     private Collection $ingredients;
 
     /**
      * @var Collection<int, PlannerRecipe>
      */
-    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: PlannerRecipe::class)]
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: PlannerRecipe::class, inversedBy: 'plannerRecipes')]
     private Collection $plannerRecipes;
 
     public function __construct()
