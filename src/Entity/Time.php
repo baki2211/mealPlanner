@@ -21,7 +21,7 @@ class Time
     /**
      * @var Collection<int, PlannerRecipe>
      */
-    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'time', inversedBy: 'plannerRecipes')]
+    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'time')]
     private Collection $plannerRecipes;
 
     public function __construct()

@@ -22,7 +22,7 @@ class Week
     /**
      * @var Collection<int, PlannerRecipe>
      */
-    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'day', inversedBy: 'plannerRecipes')]
+    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'day')]
     private Collection $plannerRecipes;
 
     public function __construct()
