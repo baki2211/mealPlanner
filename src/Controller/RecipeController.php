@@ -125,11 +125,11 @@ class RecipeController extends AbstractController
 }
     
 
-    #[Route('/myrecipes', name: 'app_my_recipes', methods: ['GET'])]
-    public function filterByUser(RecipeRepository $recipeRepository, Security $security): Response 
+    #[Route('/myrecipes/all', name: 'app_my_recipes', methods: ['GET'])]
+    public function filterByUser(RecipeRepository $recipeRepository): Response 
     {
    
-    $user = $security->getUser();
+    $user = $this->getUser();
 
     if (!$user instanceof User) {
         throw $this->createAccessDeniedException('You are not logged in.');
