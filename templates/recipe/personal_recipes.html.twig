@@ -2,41 +2,53 @@
 block body %} {% include "components/navbar/navbar.html.twig" %} {% block
 stylesheets %} {% endblock %}
 
-<div class="container">
-  <h1>Your Own Recipes</h1>
-  <a href="{{ path('app_recipe_new') }}" class="btn btn-success">Create new recipe</a>
-  <a href="{{ path('app_recipe_index') }}" class="btn btn-success">View All recipes</a>
+<div class="container mt-5">
+  <div class="text-center my-4">
+    <h1 class="display-4">My Recipes</h1>
+    <p class="lead">View, edit and create your own recipes</p>
+    <a href="{{ path('app_recipe_new') }}" class="btn btn-success"
+      >Create new recipe</a
+    >
+    {% if app.user %}
+    <a href="{{ path('app_recipe_index') }}" class="btn btn-success"
+      >View All Recipes</a
+    >
+    {% endif %}
+  </div>
 
- {% if recipes is empty %}
-        <p>No recipes found.</p>
-    {% else %}
-             <div class="row row-cols-3">
-            {% for recipe in recipes %}
-                <div>
+  {% if recipes is empty %}
+  <p>No recipes found.</p>
+  {% else %}
+  <div class="row row-cols-3">
+    {% for recipe in recipes %}
+    <div class="my-5">
       <div class="card" style="width: 18rem">
         {# <img src="..." class="card-img-top" alt="..." /> #}
         <div class="card-body">
           <h5 class="card-title">{{ recipe.name }}</h5>
-          <p class="card-text">{{ recipe.description }}</p>
+          <p class="card-text">
+            {% for category in recipe.category %}
+            <a href="{{ path('app_prod_filtered', {'id': category.id}) }}">{{ category.name }}</a>{% if not loop.last %}, {% endif %} {% endfor %}
+          </p>
           <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
           <p class="card-text">Calories: {{ recipe.calories }}</p>
           <a
             href="{{ path('app_recipe_show', { id: recipe.id }) }}"
-            class="btn btn-primary"
-            >Show details</a
+            class="btn btn-warning"
+            >View</a
           >
           {% if recipe.author.id == app.user.id %}
           <a
             href="{{ path('app_recipe_edit', { id: recipe.id }) }}"
-            class="btn btn-warning"
+            class="btn btn-success"
             >Edit</a
           >
+          {{ include("recipe/_delete_form.html.twig") }}
           {% endif %}
         </div>
       </div>
     </div>
-            {% endfor %}
-    {% endif %}
+    {% endfor %} {% endif %}
   </div>
 </div>
 {% include "components/footer/footer.html.twig" %} {% endblock %}
