@@ -24,7 +24,7 @@ stylesheets %} {% endblock %}
           <div class="card-body">
             <h5 class="card-title">{{ recipe.name }}</h5>
             <p class="card-text">
-              {% for category in recipe.category %} {{ category.name }}{% if not
+              {% for category in recipe.category %} <a href="{{ path('app_prod_filtered', {'id': category.id}) }}">{{ category.name }}</a>{% if not
               loop.last %}, {% endif %} {% endfor %}
             </p>
             <p class="card-text">Cooking time: {{ recipe.cookingTime }}</p>
