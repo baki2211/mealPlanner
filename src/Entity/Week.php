@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Entity;
@@ -21,7 +22,7 @@ class Week
     /**
      * @var Collection<int, PlannerRecipe>
      */
-    #[ORM\OneToMany(mappedBy: 'day', targetEntity: PlannerRecipe::class)]
+    #[ORM\OneToMany(targetEntity: PlannerRecipe::class, mappedBy: 'day')]
     private Collection $plannerRecipes;
 
     public function __construct()
@@ -76,3 +77,4 @@ class Week
         return $this;
     }
 }
+
