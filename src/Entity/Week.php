@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Entity;
@@ -76,3 +77,4 @@ class Week
         return $this;
     }
 }
+

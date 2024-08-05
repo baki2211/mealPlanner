@@ -76,3 +76,4 @@ class Time
         return $this;
     }
 }
+
