@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #6a9c89">
   <div class="container-fluid">
     <a class="navbar-brand ms-2 me-2" href="#">
-      <img src="{{ asset('img/planner_logo.png') }}" alt="" height="50px" />
+      <img src="{{ asset('img/planner_logo.png') }}" alt="" height="70px" />
     </a>
     <button
       class="navbar-toggler"
@@ -18,7 +18,7 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a
-            class="nav-link active"
+            class="nav-link active fs-5 text"
             aria-current="page"
             href="{{ path('app_home') }}"
             style="color: white"
@@ -27,7 +27,7 @@
         </li>
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link fs-5 text"
             href="{{ path('app_planner') }}"
             style="color: white"
             >Meal Planner</a
@@ -35,7 +35,7 @@
         </li>
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link fs-5 text"
             href="{{ path('app_recipe_index') }}"
             style="color: white"
             >All Recipes</a
@@ -44,14 +44,14 @@
         {% if is_granted("ROLE_USER") %}
         <li class="nav-item">
           <a
-            class="nav-link"
+            class="nav-link fs-5 text"
             href="{{ path('app_my_recipes') }}"
             style="color: white"
             >My Recipes</a
           >
         </li>
         {% endif %} {% if is_granted("ROLE_ADMIN") %}
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown fs-5 text">
           <a
             class="nav-link dropdown-toggle"
             href="#"
@@ -80,7 +80,7 @@
           </ul>
         </li>
         {% endif %} {% if is_granted("ROLE_USER") %}
-        <li class="nav-item">
+        <li class="nav-item fs-5 text">
           <a
             class="nav-link"
             href="{{ path('app_logout') }}"
