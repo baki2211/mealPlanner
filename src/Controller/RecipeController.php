@@ -119,8 +119,10 @@ class RecipeController extends AbstractController
             throw $this->createNotFoundException('Category not found');
         }
         $recipes = $category->getRecipes();
+        $categoryName = $category->getName();
         return $this->render('recipe/filter.html.twig', [
             'recipes' => $recipes,
+            'categoryName' => $categoryName,
     ]);
 }
     
